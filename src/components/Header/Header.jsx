@@ -1,5 +1,6 @@
 import { User } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     return (
@@ -28,7 +29,7 @@ const Header = () => {
                     </ul>
                 </div>
                 <div className="navbar-end gap-2">
-                    <button class="btn"><User size={18}></User> Sign In</button>
+                    <Link to='/login' class="btn"><User size={18}></User> Sign In</Link>
                     <button class="btn btn-primary">List Property</button>
                 </div>
             </div>

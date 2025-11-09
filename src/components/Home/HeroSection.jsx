@@ -1,3 +1,4 @@
+import { MapPinIcon } from "lucide-react";
 import React from "react";
 
 const HeroSection = () => {
@@ -12,12 +13,11 @@ const HeroSection = () => {
                     Arvane is a premium real estate brand that blends modern design with seamless
                     experiences. We help you discover elegant, high-quality homes built on trust and sophistication.
                 </p>
-                <p className="text-sm text-gray-400">© 2025 ARVANE. ALL RIGHTS RESERVED WORLDWIDE.</p>
             </div>
 
             {/* Image + Search Section */}
             <div className="container w-full rounded-3xl overflow-hidden shadow-xl">
-                <div className="relative">
+                <div>
                     <img
                         src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80"
                         alt="Modern Homes"
@@ -25,16 +25,15 @@ const HeroSection = () => {
                     />
 
                     {/* Search Bar */}
-                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-11/12 md:w-4/5 bg-base-100 shadow-lg rounded-xl p-4">
+                    <div className="p-4">
                         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-                            <input
-                                type="text"
-                                placeholder="Enter your city"
-                                className="input input-bordered w-full"
-                            />
+                            <label className="input">
+                                <MapPinIcon className="text-gray-500"></MapPinIcon>
+                                <input type="search" className="grow" placeholder="Enter Location,city or Zip Code" />
+                            </label>
                             <select className="select select-bordered w-full">
                                 <option disabled selected>Property type</option>
-                                <option>House</option>
+                                <option>Sell</option>
                                 <option>Apartment</option>
                                 <option>Villa</option>
                             </select>
