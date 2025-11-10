@@ -11,12 +11,13 @@ import Home from '@/pages/Home/Home';
 import SignUp from '@/pages/Auth/SignUp';
 import Login from '@/pages/Auth/Login';
 import PropertyListing from '@/pages/Properties/PropertyListing';
-import Property from '@/pages/Properties/Property';
+import Property from '@/pages/Properties/PropertyDetails';
 import SavedProperties from '@/pages/SavedProperties/SavedProperties';
 import SellerRequest from '@/pages/Seller/SellerRequest';
 import SellerDashboard from '@/pages/Seller/SellerDashboard';
 import AdminDashboard from '@/pages/Admin/AdminDashboard';
 import AddProperty from '@/pages/AddEditProperty/AddProperty';
+import PropertyDetails from '@/pages/Properties/PropertyDetails';
 
 export const router = createBrowserRouter([
   {
@@ -44,7 +45,7 @@ export const router = createBrowserRouter([
         path: '/property/:id',
         element: (
           <Suspense fallback={<Loader></Loader>}>
-            <Property />
+            <PropertyDetails />
           </Suspense>
         ),
       },

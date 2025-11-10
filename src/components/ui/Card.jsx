@@ -1,13 +1,19 @@
 import { Bath, Bed, Heart, MapPin, Ruler } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Card() {
+
+    const navigate = useNavigate()
+
+
     return (
         <div className="min-w-sm bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
 
             {/* Image + Top Badges */}
             <div className="relative">
                 <img
+                    onClick={() => navigate("/property/1")}
                     src="https://i.pinimg.com/736x/5c/0c/21/5c0c217891f72d38fa60fd155c7401e2.jpg"
                     alt="Property"
                     className="w-full h-90 aspect-square object-cover"
@@ -26,7 +32,7 @@ export default function Card() {
             </div>
 
             {/* Body */}
-            <div className="p-4 pt-8">
+            <div onClick={() => navigate("/property/1")} className="p-4 pt-8">
                 <h3 className="text-lg font-semibold text-[#0095a9] mb-1">$1,250,000</h3>
 
                 <p className="text-gray-800 font-medium text-[15px]">
@@ -43,15 +49,15 @@ export default function Card() {
                 {/* Stats */}
                 <div className="flex justify-start align-middle mt-4 text-gray-500 text-sm gap-6">
                     <div className="flex items-center gap-1">
-                        <Bed size={16}/> 5
+                        <Bed size={16} /> 5
                     </div>
 
                     <div className="flex items-center gap-1">
-                        <Bath size={16}/> 4
+                        <Bath size={16} /> 4
                     </div>
 
                     <div className="flex items-center gap-1">
-                        <Ruler size={16}/> 4500 sqft
+                        <Ruler size={16} /> 4500 sqft
                     </div>
                 </div>
             </div>
