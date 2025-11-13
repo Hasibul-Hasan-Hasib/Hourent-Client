@@ -1,36 +1,93 @@
 import { ArrowLeft, ArrowRight, Calendar, Heart, Phone } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useProperty } from "@/hooks/useProperties";
+import Loader from "@/components/Loader/Loader";
 
 export default function PropertyDetails() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { data: property, isLoading, error } = useProperty(id);
 
-  const property = {
-    id: 1,
-    title: "Modern Family Home with Pool",
-    location: "Beverly Hills, CA",
-    price: "$850,000",
-    beds: 4,
-    baths: 3,
-    area: "3200 sqft",
-    type: "House",
-    yearBuilt: 2020,
-    status: "Active",
-    images: [
-      "https://i.pinimg.com/736x/5c/0c/21/5c0c217891f72d38fa60fd155c7401e2.jpg",
-      "https://i.pinimg.com/736x/00/6e/0a/006e0a2571936df0ba24020a94d90453.jpg",
-      "https://i.pinimg.com/736x/5c/0c/21/5c0c217891f72d38fa60fd155c7401e2.jpg",
-    ],
-    description:
-      "Stunning modern home with contemporary design and luxurious finishes throughout. Features an open floor plan, gourmet kitchen, and resort-style backyard with pool.",
-    amenities: [
-      "Swimming Pool",
-      "Security System",
-      "Garage",
-      "Smart Home",
-      "Garden",
-      "Central AC",
-    ],
-  };
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <div className="container mx-auto py-25">
+          <Loader />
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <div className="container mx-auto py-25">
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold mb-4">Error Loading Property</h2>
+            <p className="text-red-500 mb-4">
+              {error.message || "Failed to load property details."}
+            </p>
+            <button
+              onClick={() => navigate(-1)}
+              className="btn btn-primary"
+            >
+              Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle no property found
+  if (!property) {
+    return (
+      <div className="bg-gray-50 min-h-screen">
+        <div className="container mx-auto py-25">
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold mb-4">Property Not Found</h2>
+            <p className="text-gray-500 mb-4">The property you're looking for doesn't exist.</p>
+            <button
+              onClick={() => navigate(-1)}
+              className="btn btn-primary"
+            >
+              Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Map API data to display format
+  const propertyId = property._id || property.post_id || property.id;
+  const images = [
+    property.img1,
+    property.img2,
+    property.img3
+  ].filter(img => img && img.trim()); // Filter out empty images
+  
+  const title = property.title || `Property ${property.post_id || propertyId}`;
+  const location = property.post_loc ? property.post_loc.trim() : (property.location || "Location not specified");
+  const price = property.price ? `৳${property.price.toLocaleString()}` : "Price not available";
+  const beds = property.bed_rooms || property.beds || 0;
+  const baths = property.bath_rooms || property.baths || 0;
+  const area = property.square_areas ? `${property.square_areas} sqft` : (property.area || "N/A");
+  const postType = property.post_type === 0 ? "For Rent" : "For Sale";
+  const yearBuilt = property.construction_year || property.yearBuilt || "N/A";
+  const status = property.available === 1 ? "Available" : "Not Available";
+  
+  // Generate amenities from property features
+  const amenities = [];
+  if (property.pools === 1) amenities.push("Swimming Pool");
+  if (property.garages === 1) amenities.push("Garage");
+  if (property.Insurance === 1) amenities.push("Insurance");
+  if (property.parking === 1) amenities.push("Parking");
+  if (amenities.length === 0) {
+    amenities.push("Standard Features");
+  }
 
 
   return (
@@ -50,109 +107,121 @@ export default function PropertyDetails() {
           <div className="lg:col-span-2">
 
             {/* DaisyUI Carousel */}
-            <div className="carousel w-full rounded-xl shadow-lg mb-4">
-              {property.images.map((img, index) => (
-                <div
-                  key={index}
-                  id={`slide${index + 1}`}
-                  className="carousel-item relative w-full"
-                >
-                  <img
-                    src={img}
-                    alt={`Property ${index + 1}`}
-                    className="w-full aspect-video object-cover"
-                  />
-                  <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                    <a
-                      href={`#slide${index === 0 ? property.images.length : index}`}
-                      className="btn btn-circle"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const targetId = e.currentTarget.getAttribute('href');
-                        const target = document.querySelector(targetId);
-                        if (target) {
-                          target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-                        }
-                      }}
+            {images.length > 0 ? (
+              <>
+                <div className="carousel w-full rounded-xl shadow-lg mb-4">
+                  {images.map((img, index) => (
+                    <div
+                      key={index}
+                      id={`slide${index + 1}`}
+                      className="carousel-item relative w-full"
                     >
-                      <ArrowLeft></ArrowLeft>
-                    </a>
-                    <a
-                      href={`#slide${index + 2 > property.images.length ? 1 : index + 2}`}
-                      className="btn btn-circle"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const targetId = e.currentTarget.getAttribute('href');
-                        const target = document.querySelector(targetId);
-                        if (target) {
-                          target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-                        }
-                      }}
-                    >
-                      <ArrowRight></ArrowRight>
-                    </a>
-                  </div>
+                      <img
+                        src={img.trim()}
+                        alt={`${title} - Image ${index + 1}`}
+                        className="w-full aspect-video object-cover"
+                      />
+                      <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                        <a
+                          href={`#slide${index === 0 ? images.length : index}`}
+                          className="btn btn-circle"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const targetId = e.currentTarget.getAttribute('href');
+                            const target = document.querySelector(targetId);
+                            if (target) {
+                              target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                            }
+                          }}
+                        >
+                          <ArrowLeft></ArrowLeft>
+                        </a>
+                        <a
+                          href={`#slide${index + 2 > images.length ? 1 : index + 2}`}
+                          className="btn btn-circle"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const targetId = e.currentTarget.getAttribute('href');
+                            const target = document.querySelector(targetId);
+                            if (target) {
+                              target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                            }
+                          }}
+                        >
+                          <ArrowRight></ArrowRight>
+                        </a>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Thumbnails */}
-            <div className="flex gap-2 justify-center mb-6">
-              {property.images.map((img, index) => (
-                <a
-                  key={index}
-                  href={`#slide${index + 1}`}
-                  className="w-24 h-20 border-2 border-transparent hover:border-primary rounded-xl overflow-hidden"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const targetId = e.currentTarget.getAttribute('href');
-                    const target = document.querySelector(targetId);
-                    if (target) {
-                      target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-                    }
-                  }}
-                >
-                  <img
-                    src={img}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </a>
-              ))}
-            </div>
+                {/* Thumbnails */}
+                {images.length > 1 && (
+                  <div className="flex gap-2 justify-center mb-6">
+                    {images.map((img, index) => (
+                      <a
+                        key={index}
+                        href={`#slide${index + 1}`}
+                        className="w-24 h-20 border-2 border-transparent hover:border-primary rounded-xl overflow-hidden"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const targetId = e.currentTarget.getAttribute('href');
+                          const target = document.querySelector(targetId);
+                          if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                          }
+                        }}
+                      >
+                        <img
+                          src={img.trim()}
+                          alt={`Thumbnail ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="w-full rounded-xl shadow-lg mb-4 bg-gray-200 aspect-video flex items-center justify-center">
+                <p className="text-gray-500">No images available</p>
+              </div>
+            )}
 
             {/* Property Info */}
             <div className="bg-base-100 rounded-xl shadow p-5 mb-6">
               <div className="flex justify-between items-start">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="badge badge-info">For Sale</span>
-                    <span className="badge badge-success">Featured</span>
+                    <span className="badge badge-info">{postType}</span>
+                    {status === "Available" && (
+                      <span className="badge badge-success">{status}</span>
+                    )}
                   </div>
-                  <h2 className="text-xl font-semibold">{property.title}</h2>
-                  <p className="text-sm text-gray-500">{property.location}</p>
+                  <h2 className="text-xl font-semibold">{title}</h2>
+                  <p className="text-sm text-gray-500">{location}</p>
                 </div>
                 <p className="text-xl font-semibold text-primary">
-                  {property.price}
+                  {price}
                 </p>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 mt-6 gap-4">
                 <div className="flex flex-col items-center">
-                  <p className="font-semibold">{property.beds}</p>
+                  <p className="font-semibold">{beds}</p>
                   <p className="text-sm text-gray-500">Bedrooms</p>
                 </div>
                 <div className="flex flex-col items-center">
-                  <p className="font-semibold">{property.baths}</p>
+                  <p className="font-semibold">{baths}</p>
                   <p className="text-sm text-gray-500">Bathrooms</p>
                 </div>
                 <div className="flex flex-col items-center">
-                  <p className="font-semibold">{property.area}</p>
+                  <p className="font-semibold">{area}</p>
                   <p className="text-sm text-gray-500">Area</p>
                 </div>
                 <div className="flex flex-col items-center">
-                  <p className="font-semibold">{property.type}</p>
-                  <p className="text-sm text-gray-500">Type</p>
+                  <p className="font-semibold">{property.living_rooms || property.livingRooms || "N/A"}</p>
+                  <p className="text-sm text-gray-500">Living Rooms</p>
                 </div>
               </div>
             </div>
@@ -161,7 +230,7 @@ export default function PropertyDetails() {
             <div className="bg-base-100 rounded-xl shadow p-5 mb-6">
               <h3 className="text-lg font-semibold mb-2">Description</h3>
               <p className="text-gray-600 leading-relaxed">
-                {property.description}
+                {property.description || `Beautiful property located in ${location}. This ${postType.toLowerCase()} property features ${beds} bedrooms, ${baths} bathrooms, and ${area} of living space. Built in ${yearBuilt}, this property offers modern amenities and is perfect for your needs.`}
               </p>
             </div>
 
@@ -169,7 +238,7 @@ export default function PropertyDetails() {
             <div className="bg-base-100 rounded-xl shadow p-5 mb-6">
               <h3 className="text-lg font-semibold mb-4">Amenities</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {property.amenities.map((item, i) => (
+                {amenities.map((item, i) => (
                   <p key={i} className="flex items-center gap-2 text-sm">
                     <span className="w-2 h-2 bg-primary rounded-full"></span>
                     {item}
@@ -184,20 +253,34 @@ export default function PropertyDetails() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 text-sm">
                 <div>
                   <p className="text-gray-500">Property Type</p>
-                  <p className="font-medium">{property.type}</p>
+                  <p className="font-medium">{postType}</p>
                 </div>
                 <div>
                   <p className="text-gray-500">Year Built</p>
-                  <p className="font-medium">{property.yearBuilt}</p>
+                  <p className="font-medium">{yearBuilt}</p>
                 </div>
                 <div>
                   <p className="text-gray-500">Status</p>
-                  <p className="font-medium text-green-600">{property.status}</p>
+                  <p className={`font-medium ${status === "Available" ? "text-green-600" : "text-red-600"}`}>
+                    {status}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-500">Property ID</p>
-                  <p className="font-medium">#{property.id}</p>
+                  <p className="font-medium">#{property.post_id || propertyId}</p>
                 </div>
+                {property.total_floor && (
+                  <div>
+                    <p className="text-gray-500">Total Floors</p>
+                    <p className="font-medium">{property.total_floor}</p>
+                  </div>
+                )}
+                {property.kitchens && (
+                  <div>
+                    <p className="text-gray-500">Kitchens</p>
+                    <p className="font-medium">{property.kitchens}</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
