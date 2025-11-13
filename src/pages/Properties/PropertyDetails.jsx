@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Heart, Phone } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Heart, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function PropertyDetails() {
@@ -32,6 +32,7 @@ export default function PropertyDetails() {
     ],
   };
 
+
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto py-25">
@@ -63,18 +64,32 @@ export default function PropertyDetails() {
                   />
                   <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                     <a
-                      href={`#slide${index === 0 ? property.images.length : index
-                        }`}
+                      href={`#slide${index === 0 ? property.images.length : index}`}
                       className="btn btn-circle"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const targetId = e.currentTarget.getAttribute('href');
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                          target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                        }
+                      }}
                     >
-                      ❮
+                      <ArrowLeft></ArrowLeft>
                     </a>
                     <a
-                      href={`#slide${index + 2 > property.images.length ? 1 : index + 2
-                        }`}
+                      href={`#slide${index + 2 > property.images.length ? 1 : index + 2}`}
                       className="btn btn-circle"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const targetId = e.currentTarget.getAttribute('href');
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                          target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                        }
+                      }}
                     >
-                      ❯
+                      <ArrowRight></ArrowRight>
                     </a>
                   </div>
                 </div>
@@ -88,6 +103,14 @@ export default function PropertyDetails() {
                   key={index}
                   href={`#slide${index + 1}`}
                   className="w-24 h-20 border-2 border-transparent hover:border-primary rounded-xl overflow-hidden"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const targetId = e.currentTarget.getAttribute('href');
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                    }
+                  }}
                 >
                   <img
                     src={img}
@@ -180,38 +203,53 @@ export default function PropertyDetails() {
           </div>
 
           {/* RIGHT COLUMN */}
+
           <div>
             <div className="bg-base-100 rounded-xl shadow p-6 sticky top-20">
-              <h3 className="text-lg font-semibold mb-4">
-                Contact Property Owner
-              </h3>
+
+              {/* USER INFO */}
+              <div className="flex items-center gap-3 mb-5 pb-4 border-b border-base-300">
+                <div className="avatar">
+                  <div className="w-24 rounded-full">
+                    <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-2xl">Alex Smith</h3>
+                  <p className="text-sm text-base-content/70">Property Owner</p>
+                </div>
+              </div>
+
+
+
+              {/* FORM */}
               <div className="flex flex-col gap-3">
                 <input
                   type="text"
                   placeholder="Full Name"
-                  className="input input-bordered"
+                  className="input w-full"
                 />
                 <input
                   type="email"
                   placeholder="Email"
-                  className="input input-bordered"
+                  className="input w-full"
                 />
                 <input
                   type="text"
                   placeholder="Phone"
-                  className="input input-bordered"
+                  className="input w-full"
                 />
                 <textarea
                   placeholder="Message"
-                  className="textarea textarea-bordered"
+                  className="textarea w-full"
                 ></textarea>
 
-                <button className="btn bg-primary text-white">Send Message</button>
-                <button className="btn btn-outline flex items-center gap-2">
-                  <Calendar /> Schedule Tour
+                <button className="btn bg-primary text-white">
+                  Send Message
                 </button>
-                <button className="btn btn-outline flex items-center gap-2">
-                  <Phone /> Call Now
+                <button className="btn flex items-center gap-2">
+                  <Phone className="w-5 h-5" />
+                  Call Now
                 </button>
               </div>
             </div>
