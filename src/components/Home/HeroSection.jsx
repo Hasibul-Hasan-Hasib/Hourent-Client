@@ -3,7 +3,7 @@ import React from "react";
 
 const HeroSection = () => {
     return (
-        <div className="min-h-screen bg-base-100 flex flex-col justify-center items-center pt-20 md:pb-50 pb-20">
+        <div className="min-h-screen bg-base-100 flex flex-col justify-center items-center pt-20">
             {/* Text Section */}
             <div className="max-w-4xl text-center mb-10">
                 <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-4">
@@ -21,7 +21,7 @@ const HeroSection = () => {
                     <img
                         src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80"
                         alt="Modern Homes"
-                        className="w-full h-[500px] object-cover"
+                        className="w-full h-156 object-cover"
                     />
 
                     {/* Search Bar */}
