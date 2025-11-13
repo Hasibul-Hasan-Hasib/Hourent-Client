@@ -18,6 +18,7 @@ import SellerDashboard from '@/pages/Seller/SellerDashboard';
 import AdminDashboard from '@/pages/Admin/AdminDashboard';
 import AddProperty from '@/pages/AddEditProperty/AddProperty';
 import PropertyDetails from '@/pages/Properties/PropertyDetails';
+import About from '@/pages/About/About';
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <PropertyDetails />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/about',
+        element: (
+          <Suspense fallback={<Loader></Loader>}>
+            <About />
           </Suspense>
         ),
       },
