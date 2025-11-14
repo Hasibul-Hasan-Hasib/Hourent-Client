@@ -18,6 +18,7 @@ import SellerDashboard from '@/pages/Seller/SellerDashboard';
 import AdminDashboard from '@/pages/Admin/AdminDashboard';
 import AddProperty from '@/pages/AddEditProperty/AddProperty';
 import About from '@/pages/About/About';
+import Contact from '@/pages/Contact/Contact';
 
 
 export const router = createBrowserRouter([
@@ -55,6 +56,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loader></Loader>}>
             <About />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/contact',
+        element: (
+          <Suspense fallback={<Loader></Loader>}>
+            <Contact />
           </Suspense>
         ),
       },
