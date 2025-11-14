@@ -2,9 +2,7 @@ import React from 'react';
 
 const Loader = () => {
     return (
-        <div>
-            this is a loader
-        </div>
+        <span className="loading loading-infinity loading-xl"></span>
     );
 };
 
